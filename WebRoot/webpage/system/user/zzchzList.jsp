@@ -46,6 +46,8 @@
 		<span style="float:left;">
 		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 			onclick="zzchzList.expFiles()">导出</a>
+		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
+			onclick="zzchzList.expExcelFiles()">导出excel</a>
 		</span>
 		<span style="float:right">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="zzchzList.listSearch()">查询</a>

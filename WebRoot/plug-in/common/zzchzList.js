@@ -86,6 +86,11 @@ var zzchzList = {
 					}
 				}
 			})
+		},
+		expExcelFiles:function(){
+			var queryParams = $('#zzchzList').datagrid('options').queryParams;
+			var zzchzqdate = $("[name=zzchzqdate]").val();
+			window.location.href="jeecgJdbcController.do?zzchzexpExcelFiles&zzchzqdate="+zzchzqdate;// 请求的action路径;
 		}
 	};
 function searchReset(name) {

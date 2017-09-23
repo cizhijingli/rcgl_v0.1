@@ -526,7 +526,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		Long iCount = getCountForJdbcParam(sqlCnt, null);
 
 		// 取出当前页的数据
-		String sql = "SELECT t.typename,s.jl,w.wlj,y.ylj,n.nlj,w.wlj+y.ylj as bzghj from "
+		String sql = "SELECT t.typename,s.jl,(case when w.wlj is null then 0 else w.wlj END) as wlj,(case when y.ylj is null then 0 else y.ylj END) as ylj,"
+				+ "(case when n.nlj is null then 0 else n.nlj END) as nlj,(case when y.ylj is null then w.wlj when w.wlj is null then y.ylj else w.wlj+y.ylj END) as bzghj from "
 				+ "(select * from z_s_type where typegroupid=1) t LEFT JOIN "
 				+ "(select (CASE WHEN z.sy is NULL then t1.`value` else cast(t1.`value`-sy as char) END) as jl,t1.typename from z_s_type t1 "
 				+ "LEFT JOIN (select count(z.id) as sy,z.depart from z_s_zzc z where z.ksdate<='" + qdate
@@ -556,12 +557,12 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 				+ "' and z3.ljdate>'" + qdate + "' ";
 
 		List<Map<String, Object>> mapList1 = findForJdbc(sql, dataGrid.getPage(), 50);
-		List<Map<String, Object>> mapList2 = findForJdbc(sql2, 1, 50);
+		// List<Map<String, Object>> mapList2 = findForJdbc(sql2, 1, 50);
 
 		// 将结果集转换成页面上对应的数据集
 		Db2Page[] db2Pages = { new Db2Page("typename"), new Db2Page("jl"), new Db2Page("wlj", "wlj", null),
 				new Db2Page("ylj", "ylj", null), new Db2Page("nlj", "nlj", null), new Db2Page("bzghj", "bzghj", null) };
-		JSONObject jObject = getJsonDatagridEasyUI4(mapList1, mapList2, qdate, db2Pages);
+		JSONObject jObject = getJsonDatagridEasyUI4(mapList1, qdate, db2Pages);
 		return jObject;
 		// end of 方式3 ========================================= */
 	}
@@ -581,7 +582,7 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		Long iCount = getCountForJdbcParam(sqlCnt, null);
 
 		// 取出当前页的数据
-		String sql = "SELECT t.typename,s.jl,w.wlj,y.ylj,n.nlj,w.wlj+y.ylj as bzghj from "
+		String sql = "SELECT CONCAT(t.typename,'') as typename,CONCAT(s.jl,'') as jl,CONCAT((case when w.wlj is null then 0 else w.wlj END),'') as wlj,CONCAT((case when y.ylj is null then 0 else y.ylj END),'') as ylj,CONCAT((case when n.nlj is null then 0 else n.nlj END),'') as nlj,CONCAT((case when y.ylj is null then w.wlj when w.wlj is null then y.ylj else w.wlj+y.ylj END),'') as bzghj from "
 				+ "(select * from z_s_type where typegroupid=1) t LEFT JOIN "
 				+ "(select (CASE WHEN z.sy is NULL then t1.`value` else cast(t1.`value`-sy as char) END) as jl,t1.typename from z_s_type t1 "
 				+ "LEFT JOIN (select count(z.id) as sy,z.depart from z_s_zzc z where z.ksdate<='" + qdate
@@ -680,8 +681,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	 *            : 页面表示数据与数据库字段的对应关系列表
 	 * @return JSONObject
 	 */
-	public JSONObject getJsonDatagridEasyUI4(List<Map<String, Object>> mapList1, List<Map<String, Object>> mapList2,
-			String qdate, Db2Page[] dataExchanger) {
+	public JSONObject getJsonDatagridEasyUI4(List<Map<String, Object>> mapList1, String qdate,
+			Db2Page[] dataExchanger) {
 		// easyUI的dataGrid方式 －－－－这部分可以提取成统一处理
 		String jsonTemp = "{\'qdate\':'" + qdate + "',\'rows\':[";
 		for (int j = 0; j < mapList1.size(); j++) {
@@ -704,27 +705,15 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 			}
 			jsonTemp += "}";
 		}
-		jsonTemp += "],\'hj\':[}";
-		for (int j = 0; j < mapList2.size(); j++) {
-			Map<String, Object> m = mapList2.get(j);
-			if (j > 0) {
-				jsonTemp += ",";
-			}
-			jsonTemp += "{";
-			for (int i = 0; i < dataExchanger.length; i++) {
-				if (i > 0) {
-					jsonTemp += ",";
-				}
-				jsonTemp += "'" + dataExchanger[i].getKey() + "'" + ":";
-				Object objValue = dataExchanger[i].getData(m);
-				if (objValue == null) {
-					jsonTemp += "0";
-				} else {
-					jsonTemp += "'" + objValue + "'";
-				}
-			}
-			jsonTemp += "}";
-		}
+		/*
+		 * jsonTemp += "],\'hj\':[}"; for (int j = 0; j < mapList2.size(); j++)
+		 * { Map<String, Object> m = mapList2.get(j); if (j > 0) { jsonTemp +=
+		 * ","; } jsonTemp += "{"; for (int i = 0; i < dataExchanger.length;
+		 * i++) { if (i > 0) { jsonTemp += ","; } jsonTemp += "'" +
+		 * dataExchanger[i].getKey() + "'" + ":"; Object objValue =
+		 * dataExchanger[i].getData(m); if (objValue == null) { jsonTemp += "0";
+		 * } else { jsonTemp += "'" + objValue + "'"; } } jsonTemp += "}"; }
+		 */
 		jsonTemp += "]}";
 		JSONObject jObject = JSONObject.fromObject(jsonTemp);
 		return jObject;
@@ -862,7 +851,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		Long iCount = getCountForJdbcParam(sqlCnt, null);
 
 		// 取出当前页的数据
-		String sql = "SELECT t.typename,s.jl,w.wlj,y.ylj,n.nlj,w.wlj+y.ylj as bzghj from "
+		String sql = "SELECT t.typename,s.jl,(case when w.wlj is null then 0 else w.wlj END) as wlj,(case when y.ylj is null then 0 else y.ylj END) as ylj,"
+				+ "(case when n.nlj is null then 0 else n.nlj END) as nlj,(case when y.ylj is null then w.wlj when w.wlj is null then y.ylj else w.wlj+y.ylj END) as bzghj from "
 				+ "(select * from z_s_type where typegroupid=1) t LEFT JOIN "
 				+ "(select (CASE WHEN z.sy is NULL then t1.`value` else cast(t1.`value`-sy as char) END) as jl,t1.typename from z_s_type t1 "
 				+ "LEFT JOIN (select count(z.id) as sy,z.depart from z_s_zzc z where z.ksdate<='" + qdate

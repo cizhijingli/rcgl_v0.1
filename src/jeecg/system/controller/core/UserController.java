@@ -210,6 +210,34 @@ public class UserController {
 		TSUser user = ResourceUtil.getSessionUserName();
 		String password = oConvertUtils.getString(request.getParameter("password"));
 		String newpassword = oConvertUtils.getString(request.getParameter("newpassword"));
+		String pString = password;
+		if (!pString.equals(user.getPassword())) {
+			j.setMsg("原密码不正确");
+			j.setSuccess(false);
+		} else {
+			try {
+				user.setPassword(newpassword);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			systemService.updateEntitie(user);
+			j.setMsg("修改成功");
+
+		}
+		return j;
+	}
+	/**
+	 * 修改密码
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "savenewpwd1")
+	@ResponseBody
+	public AjaxJson savenewpwd1(HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		TSUser user = ResourceUtil.getSessionUserName();
+		String password = oConvertUtils.getString(request.getParameter("password"));
+		String newpassword = oConvertUtils.getString(request.getParameter("newpassword"));
 		String pString = PasswordUtil.encrypt(user.getUserName(), password, PasswordUtil.getStaticSalt());
 		if (!pString.equals(user.getPassword())) {
 			j.setMsg("原密码不正确");

@@ -9,8 +9,8 @@ import org.jeecgframework.core.annotation.Excel;
  * 项目文件父表(其他文件表需继承该表)
  */
 public  class WljZzc extends IdEntity implements java.io.Serializable {
-	@Excel(exportName="起止时间", exportConvertSign = 0, exportFieldWidth = 20, importConvertSign = 0)
-	private String qzdate;// 起止时间
+	@Excel(exportName="起止日期", exportConvertSign = 0, exportFieldWidth = 0, importConvertSign = 0)
+	private String qzdate;// 起止日期
 	@Excel(exportName="单位", exportConvertSign = 0, exportFieldWidth = 10, importConvertSign = 0)
 	private String depart;// 单位 
 	@Excel(exportName="姓名", exportConvertSign = 0, exportFieldWidth = 10, importConvertSign = 0)
@@ -38,13 +38,13 @@ public  class WljZzc extends IdEntity implements java.io.Serializable {
 	@Excel(exportName="备注", exportConvertSign = 0, exportFieldWidth = 30, importConvertSign = 0)
 	private String note;
 	
+	
 	public String getQzdate() {
 		return qzdate;
 	}
 	public void setQzdate(String qzdate) {
 		this.qzdate = qzdate;
 	}
-		
 	public String getDepart() {
 		return depart;
 	}

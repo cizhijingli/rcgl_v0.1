@@ -19,6 +19,7 @@ import jeecg.demo.entity.test.JeecgJdbcEntity;
 import jeecg.demo.service.test.JeecgJdbcServiceI;
 import jeecg.system.controller.core.DocumentHandler;
 import jeecg.system.pojo.base.BzgZzc;
+import jeecg.system.pojo.base.HzZzc;
 import jeecg.system.pojo.base.NljZzc;
 import jeecg.system.pojo.base.WljZzc;
 import jeecg.system.pojo.base.YljZzc;
@@ -669,6 +670,68 @@ public class JeecgJdbcController extends BaseController {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		message = "文件导出成功";
+		j.setMsg(message);
+		return j;
+	}
+
+	/**
+	 * 汇总导出Excel文件
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "zzchzexpExcelFiles")
+	@ResponseBody
+	public AjaxJson zzchzexpExcelFiles(ZSZzc zsZzc, HttpServletRequest request,HttpServletResponse response, DataGrid dataGrid) {
+		AjaxJson j = new AjaxJson();
+		Date now = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");// 可以方便地修改日期格式
+		String qdate = dateFormat.format(now);
+		if (request.getParameter("zzchzqdate") != null && !"".equals(request.getParameter("zzchzqdate"))) {
+			qdate = oConvertUtils.getString(request.getParameter("zzchzqdate").replace("-", "").trim());
+		}
+
+		// 生成提示信息，
+		response.setContentType("application/vnd.ms-excel");
+		String codedFileName = null;
+		OutputStream fOut = null;
+		try {
+			// ---------begin
+			// 输出文档路径及名称
+			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatahz(zsZzc, qdate);
+			List<HzZzc> hzZzcs = this.jeecgJdbcService.ListMap2JavaBean(mapList, HzZzc.class);
+
+			qdate = qdate + "十二总队民警不在岗情况汇总表";
+			codedFileName = qdate;
+			// 根据浏览器进行转码，使其支持中文文件名
+			String browse = BrowserUtils.checkBrowse(request);
+			if ("MSIE".equalsIgnoreCase(browse.substring(0, 4))) {
+				response.setHeader("content-disposition",
+						"attachment;filename=" + java.net.URLEncoder.encode(codedFileName, "UTF-8") + ".xls");
+			} else {
+				String newtitle = new String(codedFileName.getBytes("UTF-8"), "ISO8859-1");
+				response.setHeader("content-disposition", "attachment;filename=" + newtitle + ".xls");
+			}
+			// 进行转码，使其支持中文文件名
+			// ---------end
+			// 产生工作簿对象
+			HSSFWorkbook workbook = null;
+			workbook = ExcelExportUtil.exportExcel3(qdate, HzZzc.class, hzZzcs);
+			fOut = response.getOutputStream();
+			workbook.write(fOut);
+		} catch (UnsupportedEncodingException e1) {
+
+		} catch (Exception e) {
+
+		} finally {
+			try {
+				fOut.flush();
+				fOut.close();
+			} catch (IOException e) {
+
+			}
 		}
 
 		message = "文件导出成功";
