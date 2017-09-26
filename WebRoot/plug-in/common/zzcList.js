@@ -2,7 +2,7 @@ $(function() {
 		$('#zzcList').datagrid({
 			idField : 'id',
 			title : '不在岗管理综合',
-			url : 'userController.do?zzcdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,spdate,cxtype,qwaddress,',
+			url : 'userController.do?zzcdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,ksdate,jsdate,qwaddress',
 			fit : true,
 			loadMsg : '数据加载中...',
 			pageSize : 10,
@@ -20,9 +20,9 @@ $(function() {
 			{field : 'bzgzl',title : '不在岗种类',width : 55,sortable : true}, 
 			{field : 'ljdate',title : '离京日期',width : 60,sortable : true}, 
 			{field : 'fjdate',title : '返京日期',width : 60,sortable : true}, 
-			{field : 'spdate',title : '审批日期',width : 60,sortable : true}, 
-			{field : 'cxtype',title : '出行方式',width : 60,sortable : true}, 
-			{field : 'qwaddress',title : '前往地点',width : 60,sortable : true} ,
+			{field : 'ksdate',title : '开始日期',width : 60,sortable : true}, 
+			{field : 'jsdate',title : '结束日期',width : 60,sortable : true}, 
+			{field : 'qwaddress',title : '前往地点',width : 60,sortable : true}/* ,
 			{field : 'null',title : '操作',width : 50,
 				formatter : function(value, rec, index) {
 					if (!rec.id) {
@@ -31,7 +31,7 @@ $(function() {
 					var href = '';
 					href += "[<a href='#' onclick=zzcList.del('"+rec.id+"')>删除</a>]";
 					return href;
-			}}] ],
+			}}*/] ],
 			onClickRow : function(rowIndex, rowData) {
 				rowid = rowData.id;
 				gridname = 'zzcList';
@@ -56,10 +56,16 @@ var zzcList = {
 				queryParams[$(this).attr('name')] = $(this).val();
 			});
 			$('#zzcList').datagrid({
-				url : "userController.do?zzcdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,spdate,cxtype,qwaddress"
+				url : "userController.do?zzcdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,ksdate,jsdate,qwaddress"
 			});
 		},
-		del:function (id) {
+		del:function () {
+			var rowData = $('#zzcList').datagrid('getSelected');
+			if (!rowData) {
+				tip('请选择编辑项目');
+				return;
+			}
+			var id = rowData.id;
 			$.messager.confirm('提示','是否删除', function(r){
 				if (r){
 					$.ajax({

@@ -53,6 +53,8 @@
 			onclick="add('录入','userController.do?zzcaddorupdate','zzcList')">录入</a>
 		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 			onclick="update('维护','userController.do?zzcaddorupdate','zzcList')">维护</a>
+		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
+			onclick="zzcList.del()">删除</a>
 		<!-- <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 			onclick="zzcList.expFiles()">当日导出</a> -->
 		<!-- <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add"
