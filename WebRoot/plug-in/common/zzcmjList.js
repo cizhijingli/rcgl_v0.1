@@ -2,7 +2,7 @@ $(function() {
 		$('#zzcmjList').datagrid({
 			idField : 'id',
 			title : '民警不在岗管理',
-			url : 'userController.do?zzcmjdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,spdate,cxtype,qwaddress,',
+			url : 'userController.do?zzcmjdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,ksdate,jsdate,qwaddress',
 			fit : true,
 			loadMsg : '数据加载中...',
 			pageSize : 10,
@@ -13,37 +13,31 @@ $(function() {
 			fitColumns : true,
 			showFooter : true,
 			frozenColumns : [ [] ],
-			columns : [ [ {field : 'id',title : '编号',hidden : true,}, 
-			{field : 'zzcdepart',title : '单位',width : 50,sortable : true}, 
-			{field : 'name',title : '姓名',width : 40},
-			{field : 'zw',title : '职务',width : 50,sortable : true}, 
-			{field : 'bzgzl',title : '不在岗种类',width : 55,sortable : true}, 
-			{field : 'ljdate',title : '离京日期',width : 60,sortable : true}, 
-			{field : 'fjdate',title : '返京日期',width : 60,sortable : true}, 
-			{field : 'spdate',title : '审批日期',width : 60,sortable : true}, 
-			{field : 'cxtype',title : '出行方式',width : 60,sortable : true}, 
-			{field : 'qwaddress',title : '前往地点',width : 60,sortable : true} ,
-			{field : 'null',title : '操作',width : 50,
-				formatter : function(value, rec, index) {
-					if (!rec.id) {
-						return '';
-					}
-					var href = '';
-					href += "[<a href='#' onclick=zzcmjList.del('"+rec.id+"')>删除</a>]";
-					return href;
-			}}] ],
+			columns : [ [ {field : 'id',title : '编号',hidden : true}, 
+			  			{field : 'zzcdepart',title : '单位',width : 50,sortable : true}, 
+			  			{field : 'name',title : '姓名',width : 40},
+			  			{field : 'zw',title : '职务',width : 50,sortable : true}, 
+			  			{field : 'bzgzl',title : '不在岗种类',width : 55,sortable : true}, 
+			  			{field : 'ljdate',title : '离京日期',width : 60,sortable : true}, 
+			  			{field : 'fjdate',title : '返京日期',width : 60,sortable : true}, 
+			  			{field : 'ksdate',title : '开始日期',width : 60,sortable : true}, 
+			  			{field : 'jsdate',title : '结束日期',width : 60,sortable : true}, 
+			  			{field : 'qwaddress',title : '前往地点',width : 60,sortable : true}
+			] ],
 			onClickRow : function(rowIndex, rowData) {
 				rowid = rowData.id;
 				gridname = 'zzcmjList';
 			}
-		});$('#zzcmjList').datagrid('getPager').pagination({
+		});
+		$('#zzcmjList').datagrid('getPager').pagination({
 			beforePageText : '',
 			afterPageText : '/{pages}',
 			displayMsg : '{from}-{to}共{total}条',
 			showPageList : true,
 			pageList : [ 10, 20, 30 ],
 			showRefresh : true
-		});$('#zzcmjList').datagrid('getPager').pagination({
+		});
+		$('#zzcmjList').datagrid('getPager').pagination({
 			onBeforeRefresh : function(pageNumber, pageSize) {
 				$(this).pagination('loading');$(this).pagination('loaded');
 			}
@@ -56,10 +50,16 @@ var zzcmjList = {
 				queryParams[$(this).attr('name')] = $(this).val();
 			});
 			$('#zzcmjList').datagrid({
-				url : "userController.do?zzcmjdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,spdate,cxtype,qwaddress"
+				url : "userController.do?zzcmjdatagrid&field=id,zzcdepart,name,zw,bzgzl,ljdate,fjdate,ksdate,jsdate,qwaddress"
 			});
 		},
-		del:function (id) {
+		del:function () {
+			var rowData = $('#zzcmjList').datagrid('getSelected');
+			if (!rowData) {
+				tip('请选择编辑项目');
+				return;
+			}
+			var id = rowData.id;
 			$.messager.confirm('提示','是否删除', function(r){
 				if (r){
 					$.ajax({

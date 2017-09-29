@@ -36,4 +36,7 @@ public interface JeecgJdbcServiceI extends CommonService{
 	public <T> List<T> getZzcDatabzg(ZSZzc zsZzc, String qdate);
 	
 	public <T> List<T> ListMap2JavaBean(List<Map<String, Object>> datas, Class<T> beanClass) throws CommonException, InvocationTargetException;
+
+	/***** Add By ZM 20170924 增加重复记录check ******/
+	public Boolean checkDuplicate(ZSZzc zsZzc);
 }

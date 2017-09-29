@@ -1277,4 +1277,29 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		return new StringBuilder(strLen).append(Character.toTitleCase(str.charAt(0))).append(str.substring(1))
 				.toString();
 	}
+	
+
+	/***** Upd By ZM 20170922 增加重复记录check start******/		
+	/****  查询数据库是否存在重复时间记录，若存在则返回true，否则返回false**/
+	@Override
+	public Boolean checkDuplicate(ZSZzc zsZzc) {
+		Boolean boolRtn = false;
+		String sqlWhere = " z.id != '" + zsZzc.getId() + "' and ";
+		sqlWhere += " z.depart = '" + zsZzc.getZzcdepart() + "' and ";
+		sqlWhere += " z.name = '" + zsZzc.getName() + "' and ";
+		sqlWhere += " ((z.ksdate <= '" + zsZzc.getKsdate() + "'";
+		sqlWhere += " and z.jsdate >= '" + zsZzc.getKsdate() + "') or";
+		sqlWhere += " (z.ksdate <= '" + zsZzc.getJsdate() + "'";
+		sqlWhere += " and z.jsdate >= '" + zsZzc.getJsdate() + "') or";
+		sqlWhere += " (z.ksdate >= '" + zsZzc.getKsdate() + "'";
+		sqlWhere += " and z.jsdate <= '" + zsZzc.getJsdate() + "'))";
+
+		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
+		String sqlCnt = "select count(*) from z_s_zzc z ";
+			   sqlCnt += " where " + sqlWhere;
+		Long iCount = getCountForJdbc(sqlCnt);
+		if (iCount == 0) {boolRtn = true;}		
+		return boolRtn;
+	}
+	/***** Upd By ZM 20170922 增加重复记录check end******/	
 }

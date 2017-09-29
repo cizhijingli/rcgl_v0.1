@@ -42,6 +42,7 @@ import org.jeecgframework.core.common.model.json.ComboBox;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.ValidForm;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.DataUtils;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.ListtoMenu;
 import org.jeecgframework.core.util.PasswordUtil;
@@ -867,27 +868,27 @@ public class UserController {
 
 		if (zsZzc.getFjdate() != null) {
 			String fjdate = oConvertUtils.getString(zsZzc.getFjdate().replace("-", "").trim());
-			cq.eq("fjdate", fjdate);
+//			cq.eq("fjdate", fjdate);
 			zsZzc.setFjdate(fjdate);
 		}
 		if (zsZzc.getJsdate() != null) {
 			String jsdate = oConvertUtils.getString(zsZzc.getJsdate().replace("-", "").trim());
-			cq.eq("jsdate", jsdate);
+//			cq.eq("jsdate", jsdate);
 			zsZzc.setJsdate(jsdate);
 		}
 		if (zsZzc.getKsdate() != null) {
 			String ksdate = oConvertUtils.getString(zsZzc.getKsdate().replace("-", "").trim());
-			cq.eq("ksdate", ksdate);
+//			cq.eq("ksdate", ksdate);
 			zsZzc.setKsdate(ksdate);
 		}
 		if (zsZzc.getLjdate() != null) {
 			String ljdate = oConvertUtils.getString(zsZzc.getLjdate().replace("-", "").trim());
-			cq.eq("ljdate", ljdate);
+//			cq.eq("ljdate", ljdate);
 			zsZzc.setLjdate(ljdate);
 		}
 		if (zsZzc.getSpdate() != null) {
 			String spdate = oConvertUtils.getString(zsZzc.getSpdate().replace("-", "").trim());
-			cq.eq("spdate", spdate);
+//			cq.eq("spdate", spdate);
 			zsZzc.setSpdate(spdate);
 		}
 		cq.addOrder("zzcdepart", SortDirection.asc);
@@ -1092,9 +1093,17 @@ public class UserController {
 		Collections.sort(zwList);
 		req.setAttribute("zwList", zwList);
 		
-		List<ZSType> bzgList = systemService.findByProperty(ZSType.class, "ZSTypegroup.id", "3");
-		Collections.sort(bzgList);
-		req.setAttribute("bzgList", bzgList);
+		/*************** Upd By ZM 20170918 input改为 checkbox Start *************/
+		/** 不在岗种类列表  **/
+		List<ZSType> bzgzlList = systemService.findByProperty(ZSType.class, "ZSTypegroup.id", "3");
+		Collections.sort(bzgzlList);
+		req.setAttribute("bzgzlList" , bzgzlList);
+		/** 出行方式列表  **/
+		List<ZSType> cxtypeList = systemService.findByProperty(ZSType.class, "ZSTypegroup.id", "4");
+		Collections.sort(cxtypeList);
+		req.setAttribute("cxtypeList" , cxtypeList);
+		
+		/***************  Upd By ZM 20170918 input改为 checkbox End  *************/
 
 		if (StringUtil.isNotEmpty(zsZzc.getId())) {
 			zsZzc = systemService.getEntity(ZSZzc.class, zsZzc.getId());
@@ -1165,12 +1174,26 @@ public class UserController {
 			}
 			if (zsZzc.getNote() != null && !"".equals(zsZzc.getNote())) {
 				zsZzcs.setNote(zsZzc.getNote().trim());
-			}			
-
-			systemService.updateEntitie(zsZzcs);
-
-			message = "民警: " + zsZzcs.getName() + "不在岗情况更新成功";
-			systemService.addLog(message, Globals.Log_Type_LOGIN, Globals.Log_Leavel_INFO);
+			}	
+			
+			/***** Upd By ZM 20170924增加重复记录check start******/
+			Boolean isDuplicate = this.jeecgJdbcService.checkDuplicate(zsZzcs);
+			if(!isDuplicate){
+				message = "民警: " + zsZzcs.getName() + "休假时间重复，更新失败！！";
+				j.setMsg(message);
+				return j;
+			} else {
+				
+				systemService.updateEntitie(zsZzcs);
+	
+				message = "民警: " + zsZzcs.getName() + "不在岗情况更新成功";
+				/*
+				 * if (StringUtil.isNotEmpty(roleid)) { saveRoleUser(users, roleid);
+				 * }
+				 */
+				systemService.addLog(message, Globals.Log_Type_LOGIN, Globals.Log_Leavel_INFO);
+			}
+			/***** Upd By ZM 20170924增加重复记录check end******/
 		} else {
 			zsZzc.setSpdate(oConvertUtils.getString(zsZzc.getSpdate().replace("-", "").trim()));
 			zsZzc.setKsdate(oConvertUtils.getString(zsZzc.getKsdate().replace("-", "").trim()));
@@ -1189,10 +1212,21 @@ public class UserController {
 			} else {
 				zsZzc.setJsdate("99999999");
 			}
-			
-			systemService.save(zsZzc);
-			message = "民警: " + zsZzc.getName() + "不在岗情况添加成功";
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			zsZzc.setCreatedate(DataUtils.formatDate(DataUtils.gettimestamp(),"yyyyMMdd"));
+
+			/***** Upd By ZM 20170924 增加重复记录check start******/
+			Boolean isDuplicate = this.jeecgJdbcService.checkDuplicate(zsZzc);
+			if(!isDuplicate){
+				message = "民警: " + zsZzc.getName() + "休假时间重复，添加失败！！！";
+				j.setMsg(message);
+				return j;
+			} else {
+				systemService.save(zsZzc);
+				message = "民警: " + zsZzc.getName() + "不在岗情况添加成功";
+				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			}
+			/***** Upd By ZM 20170924 增加重复记录check end******/
+
 		}
 		j.setMsg(message);
 		return j;
@@ -1272,11 +1306,30 @@ public class UserController {
 	@ResponseBody
 	public AjaxJson delzzc(ZSZzc zsZzc, HttpServletRequest req) {
 		AjaxJson j = new AjaxJson();
+		
+		TSUser u = ResourceUtil.getSessionUserName();
+		String roles = "";
+		if (u != null) {
+			List<TSRoleUser> rUsers = systemService.findByProperty(TSRoleUser.class, "TSUser.id", u.getId());
+			for (TSRoleUser ru : rUsers) {
+				TSRole role = ru.getTSRole();
+				roles += role.getId() + ",";
+			}
+		}
 
 		String zzcid = "";
 		if (req.getParameter("zzcid") != null && !"".equals(req.getParameter("zzcid"))) {
 			zzcid = oConvertUtils.getString(req.getParameter("zzcid").trim());
 			zsZzc = systemService.getEntity(ZSZzc.class, zzcid);
+
+			int now = Integer.parseInt(DataUtils.formatDate(DataUtils.gettimestamp(),"yyyyMMdd"));
+			int temp = Integer.parseInt(zsZzc.getCreatedate().trim());
+			if((now-temp)>1&&roles.indexOf("1")!=-1){
+				message = "记录"+zsZzc.getZzcdepart()+""+zsZzc.getName()+""+zsZzc.getBzgzl()+"已超过一天，不能删除";
+				j.setMsg(message);
+				return j;
+			};
+			
 			ZSZzcDel zsZzcDle = new ZSZzcDel();
 			BeanUtils.copyProperties(zsZzc,zsZzcDle);
 			message = "记录"+zsZzc.getZzcdepart()+""+zsZzc.getName()+""+zsZzc.getBzgzl()+"删除成功";

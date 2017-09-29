@@ -52,6 +52,8 @@
 			onclick="add('录入','userController.do?zzcmjaddorupdate','zzcmjList')">录入</a>
 		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 			onclick="update('维护','userController.do?zzcmjaddorupdate','zzcmjList')">维护</a>
+		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
+			onclick="zzcmjList.del()">删除</a>
 		</span>
 		<span style="float:right">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="zzcmjList.listSearch()">查询</a>

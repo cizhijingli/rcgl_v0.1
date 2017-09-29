@@ -38,6 +38,7 @@ public  class ZSZzc extends IdEntity implements java.io.Serializable {
 	private String cxtype;//出行方式
 	private String qwaddress;//前往地点
 	private String note;
+	private String createdate;//创建时间
 	
 	@Column(name = "depart")
 	public String getZzcdepart() {
@@ -130,5 +131,13 @@ public  class ZSZzc extends IdEntity implements java.io.Serializable {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	
+	@Column(name = "createdate")
+	public String getCreatedate() {
+		return createdate;
+	}
+	public void setCreatedate(String createdate) {
+		this.createdate = createdate;
 	}
 }

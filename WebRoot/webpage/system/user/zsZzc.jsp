@@ -28,9 +28,7 @@
     </tr>
     <tr>
      <td align="right" width="15%" nowrap>
-      <label class="Validform_label">
-       姓名:
-      </label>
+      <label class="Validform_label">姓名:</label>
      </td>
      <td class="value" width="85%">
        <input id="name" class="inputxt" name="name" value="${zsZzc.name }" datatype="s2-30" >
@@ -104,7 +102,6 @@
 	   <label class="Validform_label"> - </label>
 	   <input class="Wdate" onClick="WdatePicker()" style="width: 150px" id="jsdate" 
 	 		name="jsdate" value="${zsZzc.jsdate}" readonly="readonly">
-       <span class="Validform_checktip">必填</span>
      </td>
     </tr>
     <!-- Upd By ZM 20170918 必填项验证 End-->
