@@ -891,7 +891,7 @@ public class UserController {
 //			cq.eq("spdate", spdate);
 			zsZzc.setSpdate(spdate);
 		}
-		cq.addOrder("zzcdepart", SortDirection.asc);
+		cq.addOrder("createdate", SortDirection.asc);
 		cq.add();
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, zsZzc);
@@ -941,7 +941,7 @@ public class UserController {
 			cq.eq("spdate", spdate);
 			zsZzc.setSpdate(spdate);
 		}
-		cq.addOrder("zzcdepart", SortDirection.asc);
+		cq.addOrder("createdate", SortDirection.asc);
 		cq.add();
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, zsZzc);
@@ -1143,7 +1143,25 @@ public class UserController {
 		AjaxJson j = new AjaxJson();
 		// 得到用户的角色
 		if (StringUtil.isNotEmpty(zsZzc.getId())) {
+			TSUser u = ResourceUtil.getSessionUserName();
+			String roles = "";
+			if (u != null) {
+				List<TSRoleUser> rUsers = systemService.findByProperty(TSRoleUser.class, "TSUser.id", u.getId());
+				for (TSRoleUser ru : rUsers) {
+					TSRole role = ru.getTSRole();
+					roles += role.getId() + ",";
+				}
+			}
+			
 			ZSZzc zsZzcs = systemService.getEntity(ZSZzc.class, zsZzc.getId());
+			int now = Integer.parseInt(DataUtils.formatDate(DataUtils.gettimestamp(),"yyyyMMdd"));
+			int temp = Integer.parseInt(zsZzcs.getCreatedate().substring(0,10).replace("-", "").trim());
+			if((now-temp)>1&&roles.indexOf("1")!=-1){
+				message = "记录"+zsZzcs.getZzcdepart()+""+zsZzcs.getName()+""+zsZzcs.getBzgzl()+"已超过一天，不能修改";
+				j.setMsg(message);
+				return j;
+			};
+			
 			zsZzcs.setZzcdepart(zsZzc.getZzcdepart().trim());
 			zsZzcs.setZw(zsZzc.getZw().trim());
 			zsZzcs.setBzgzl(zsZzc.getBzgzl().trim());
@@ -1212,7 +1230,8 @@ public class UserController {
 			} else {
 				zsZzc.setJsdate("99999999");
 			}
-			zsZzc.setCreatedate(DataUtils.formatDate(DataUtils.gettimestamp(),"yyyyMMdd"));
+			//zsZzc.setCreatedate(DataUtils.formatDate(DataUtils.gettimestamp(),"yyyyMMdd"));
+			zsZzc.setCreatedate(DataUtils.gettimestamp().toString());
 
 			/***** Upd By ZM 20170924 增加重复记录check start******/
 			Boolean isDuplicate = this.jeecgJdbcService.checkDuplicate(zsZzc);
