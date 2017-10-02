@@ -443,6 +443,9 @@ public class ExcelExportUtil {
 					} else {
 						value = getMethod.invoke(t, new Object[] {});
 					}
+					if(value != null&&"99999999".equals(value)){
+						value = null;
+					}
 					cell.setCellValue(value == null ? "" : value.toString());
 
 					/*if (index % 2 == 0)
@@ -610,7 +613,7 @@ public class ExcelExportUtil {
 		HSSFFont font2 = workbook.createFont();
 		font2.setFontName("仿宋_GB2312");
 		font2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
-		font2.setFontHeightInPoints((short) 12);
+		font2.setFontHeightInPoints((short) 18);
 		titleStyle.setFont(font2);
 
 		return titleStyle;
