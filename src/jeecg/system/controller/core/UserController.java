@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jeecg.demo.entity.test.JpPersonEntity;
 import jeecg.demo.service.test.JeecgJdbcServiceI;
@@ -36,12 +37,16 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
+import org.jeecgframework.core.common.model.common.SessionInfo;
 import org.jeecgframework.core.common.model.common.UploadFile;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.ComboBox;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.model.json.ValidForm;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.extend.datasource.DataSourceContextHolder;
+import org.jeecgframework.core.extend.datasource.DataSourceType;
+import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.DataUtils;
 import org.jeecgframework.core.util.ExceptionUtil;
 import org.jeecgframework.core.util.ListtoMenu;
@@ -1476,6 +1481,24 @@ public class UserController {
 		}
 		j.setMsg(message);
 
+		return j;
+	}
+	/**
+	 * 检查用户名称
+	 * 
+	 * @param user
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(params = "checkzzc")
+	@ResponseBody
+	public AjaxJson checkzzc(ZSZzc zsZzc, HttpServletRequest req) {
+		AjaxJson j = new AjaxJson();
+		j.setMsg("验证成功!");
+		j.setSuccess(true);
+		
+		/*j.setMsg("验证失败!");
+		j.setSuccess(false);*/
 		return j;
 	}
 }
