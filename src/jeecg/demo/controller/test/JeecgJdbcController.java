@@ -21,6 +21,7 @@ import jeecg.system.controller.core.DocumentHandler;
 import jeecg.system.pojo.base.BzgZzc;
 import jeecg.system.pojo.base.HzZzc;
 import jeecg.system.pojo.base.NljZzc;
+import jeecg.system.pojo.base.TSUser;
 import jeecg.system.pojo.base.WljZzc;
 import jeecg.system.pojo.base.YljZzc;
 import jeecg.system.pojo.base.ZSZzc;
@@ -37,6 +38,7 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.BrowserUtils;
 import org.jeecgframework.core.util.MyBeanUtils;
+import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.core.util.excel.ExcelExportUtil;
@@ -334,7 +336,13 @@ public class JeecgJdbcController extends BaseController {
 		try {
 			// ---------begin
 			// 输出文档路径及名称
-			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDataylj(zsZzc, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDataylj(zsZzc, qdate,t);
 			List<YljZzc> yljZzcs = this.jeecgJdbcService.ListMap2JavaBean(mapList, YljZzc.class);
 
 			qdate = qdate + "十二总队民警不在岗已离京情况一览表";
@@ -425,7 +433,13 @@ public class JeecgJdbcController extends BaseController {
 		try {
 			// ---------begin
 			// 输出文档路径及名称
-			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatawlj(zsZzc, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatawlj(zsZzc, qdate,t);
 			List<WljZzc> wljZzcs = this.jeecgJdbcService.ListMap2JavaBean(mapList, WljZzc.class);
 
 			qdate = qdate + "十二总队民警不在岗未离京情况一览表";
@@ -517,7 +531,13 @@ public class JeecgJdbcController extends BaseController {
 		try {
 			// ---------begin
 			// 输出文档路径及名称
-			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatanlj(zsZzc, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatanlj(zsZzc, qdate,t);
 			List<NljZzc> nljZzcs = this.jeecgJdbcService.ListMap2JavaBean(mapList, NljZzc.class);
 
 			qdate = qdate + "十二总队民警拟离京情况一览表";
@@ -609,7 +629,13 @@ public class JeecgJdbcController extends BaseController {
 		try {
 			// ---------begin
 			// 输出文档路径及名称
-			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatabzg(zsZzc, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			List<Map<String, Object>> mapList = this.jeecgJdbcService.getZzcDatabzg(zsZzc, qdate,t);
 			List<BzgZzc> bzgZzcs = this.jeecgJdbcService.ListMap2JavaBean(mapList, BzgZzc.class);
 
 			qdate = qdate + "十二总队民警不在岗情况一览表";

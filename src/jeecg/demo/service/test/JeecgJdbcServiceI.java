@@ -23,20 +23,20 @@ public interface JeecgJdbcServiceI extends CommonService{
 	public JSONObject getZzcDatagridnlj(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
 	public JSONObject getZzcDatagridbzg(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
 	
-	public JSONObject getZzcDatagridylj1(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
-	public JSONObject getZzcDatagridwlj1(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
+	public JSONObject getZzcDatagridylj1(ZSZzc zsZzc, DataGrid dataGrid,String qdate,String t);
+	public JSONObject getZzcDatagridwlj1(ZSZzc zsZzc, DataGrid dataGrid,String qdate,String t);
 	public JSONObject getZzcDatagridhz1(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
-	public JSONObject getZzcDatagridnlj1(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
-	public JSONObject getZzcDatagridbzg1(ZSZzc zsZzc, DataGrid dataGrid,String qdate);
+	public JSONObject getZzcDatagridnlj1(ZSZzc zsZzc, DataGrid dataGrid,String qdate,String t);
+	public JSONObject getZzcDatagridbzg1(ZSZzc zsZzc, DataGrid dataGrid,String qdate,String t);
 	
-	public <T> List<T> getZzcDataylj(ZSZzc zsZzc, String qdate);
-	public <T> List<T> getZzcDatawlj(ZSZzc zsZzc, String qdate);
+	public <T> List<T> getZzcDataylj(ZSZzc zsZzc, String qdate,String t);
+	public <T> List<T> getZzcDatawlj(ZSZzc zsZzc, String qdate,String t);
 	public <T> List<T> getZzcDatahz(ZSZzc zsZzc, String qdate);
-	public <T> List<T> getZzcDatanlj(ZSZzc zsZzc, String qdate);
-	public <T> List<T> getZzcDatabzg(ZSZzc zsZzc, String qdate);
+	public <T> List<T> getZzcDatanlj(ZSZzc zsZzc, String qdate,String t);
+	public <T> List<T> getZzcDatabzg(ZSZzc zsZzc, String qdate,String t);
 	
 	public <T> List<T> ListMap2JavaBean(List<Map<String, Object>> datas, Class<T> beanClass) throws CommonException, InvocationTargetException;
 
-	/***** Add By ZM 20170924 Ôö¼ÓÖØ¸´¼ÇÂ¼check ******/
+	/***** Add By ZM 20170924 ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½Â¼check ******/
 	public Boolean checkDuplicate(ZSZzc zsZzc);
 }

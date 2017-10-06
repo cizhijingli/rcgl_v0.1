@@ -10,11 +10,13 @@ import java.lang.reflect.Method;
 
 import jeecg.demo.entity.test.JeecgJdbcEntity;
 import jeecg.demo.service.test.JeecgJdbcServiceI;
+import jeecg.system.pojo.base.TSUser;
 import jeecg.system.pojo.base.ZSZzc;
 import net.sf.json.JSONObject;
 
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
+import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -344,7 +346,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// -------------------------------
 	@Override
 	public JSONObject getZzcDatagridylj(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
-		String sqlWhere = getZzcSqlWhereylj(zsZzc, qdate);
+		String t="0";
+		String sqlWhere = getZzcSqlWhereylj(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -377,8 +380,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public List<Map<String, Object>> getZzcDataylj(ZSZzc zsZzc, String qdate) {
-		String sqlWhere = getZzcSqlWhereylj(zsZzc, qdate);
+	public List<Map<String, Object>> getZzcDataylj(ZSZzc zsZzc, String qdate,String t) {
+		String sqlWhere = getZzcSqlWhereylj(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -400,7 +403,7 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	}
 
 	// 拼查询条件（where语句）
-	String getZzcSqlWhereylj(ZSZzc zsZzc, String qdate) {
+	String getZzcSqlWhereylj(ZSZzc zsZzc, String qdate,String t) {		
 		// 拼出条件语句
 		String sqlWhere = "";
 		if (!sqlWhere.isEmpty()) {
@@ -409,6 +412,9 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		sqlWhere += " t.fjdate >= '" + qdate + "'";
 		sqlWhere += " and";
 		sqlWhere += " t.ljdate <= '" + qdate + "'";
+		if(t!= null && !"0".equals(t)){
+			sqlWhere += t;
+		}
 		/*
 		 * if (StringUtil.isNotEmpty(zsZzc.getJsdate())) { if
 		 * (!sqlWhere.isEmpty()) { sqlWhere += " and"; } sqlWhere +=
@@ -427,7 +433,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// -------------------------------
 	@Override
 	public JSONObject getZzcDatagridwlj(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
-		String sqlWhere = getZzcSqlWherewlj(zsZzc, qdate);
+		String t = "0";
+		String sqlWhere = getZzcSqlWherewlj(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -461,8 +468,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public List<Map<String, Object>> getZzcDatawlj(ZSZzc zsZzc, String qdate) {
-		String sqlWhere = getZzcSqlWherewlj(zsZzc, qdate);
+	public List<Map<String, Object>> getZzcDatawlj(ZSZzc zsZzc, String qdate,String t) {
+		String sqlWhere = getZzcSqlWherewlj(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -485,7 +492,7 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	}
 
 	// 拼查询条件（where语句）
-	String getZzcSqlWherewlj(ZSZzc zsZzc, String qdate) {
+	String getZzcSqlWherewlj(ZSZzc zsZzc, String qdate,String t) {
 		// 拼出条件语句
 		String sqlWhere = "";
 		if (!sqlWhere.isEmpty()) {
@@ -494,6 +501,9 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		sqlWhere += "(t.ljdate>'0' and t.ksdate <='" + qdate + "' and t.ljdate >'" + qdate + "') or"
 				+ " (t.fjdate>'0' and t.fjdate <'" + qdate + "' and t.jsdate>='" + qdate + "') or"
 				+ " (t.fjdate='0' and t.ljdate='0' and t.ksdate <='" + qdate + "' and t.jsdate>='" + qdate + "')";
+		if(t!= null && !"0".equals(t)){
+			sqlWhere += t;
+		}
 		/*
 		 * sqlWhere += " t.ksdate <= '" + qdate + "'"; sqlWhere += " and";
 		 * sqlWhere += " t.ljdate > '" + qdate + "'";
@@ -762,10 +772,10 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public JSONObject getZzcDatagridylj1(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
+	public JSONObject getZzcDatagridylj1(ZSZzc zsZzc, DataGrid dataGrid, String qdate,String t) {
 		String sqlWhere = "";
 		if (!"".equals(qdate)) {
-			sqlWhere = getZzcSqlWhereylj(zsZzc, qdate);
+			sqlWhere = getZzcSqlWhereylj(zsZzc, qdate,t);
 		}
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
@@ -799,10 +809,10 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public JSONObject getZzcDatagridwlj1(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
+	public JSONObject getZzcDatagridwlj1(ZSZzc zsZzc, DataGrid dataGrid, String qdate,String t) {
 		String sqlWhere = "";
 		if (!"".equals(qdate)) {
-			sqlWhere = getZzcSqlWherewlj(zsZzc, qdate);
+			sqlWhere = getZzcSqlWherewlj(zsZzc, qdate,t);
 		}
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
@@ -941,8 +951,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public List<Map<String, Object>> getZzcDatanlj(ZSZzc zsZzc, String qdate) {
-		String sqlWhere = getZzcSqlWherenlj(zsZzc, qdate);
+	public List<Map<String, Object>> getZzcDatanlj(ZSZzc zsZzc, String qdate,String t) {
+		String sqlWhere = getZzcSqlWherenlj(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -969,7 +979,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// -------------------------------
 	@Override
 	public JSONObject getZzcDatagridnlj(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
-		String sqlWhere = getZzcSqlWherenlj(zsZzc, qdate);
+		String t="0";
+		String sqlWhere = getZzcSqlWherenlj(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -1003,10 +1014,10 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public JSONObject getZzcDatagridnlj1(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
+	public JSONObject getZzcDatagridnlj1(ZSZzc zsZzc, DataGrid dataGrid, String qdate,String t) {
 		String sqlWhere = "";
 		if (!"".equals(qdate)) {
-			sqlWhere = getZzcSqlWherenlj(zsZzc, qdate);
+			sqlWhere = getZzcSqlWherenlj(zsZzc, qdate,t);
 		}
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
@@ -1038,14 +1049,16 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	}
 
 	// 拼查询条件（where语句）
-	String getZzcSqlWherenlj(ZSZzc zsZzc, String qdate) {
+	String getZzcSqlWherenlj(ZSZzc zsZzc, String qdate,String t) {
 		// 拼出条件语句
 		String sqlWhere = "";
 		if (!sqlWhere.isEmpty()) {
 			sqlWhere += " and";
 		}
 		sqlWhere += " t.ljdate>'" + qdate + "' ";
-
+		if(t!= null && !"0".equals(t)){
+			sqlWhere += t;
+		}
 		return sqlWhere;
 	}
 
@@ -1054,7 +1067,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// -------------------------------
 	@Override
 	public JSONObject getZzcDatagridbzg(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
-		String sqlWhere = getZzcSqlWherebzg(zsZzc, qdate);
+		String t="0";
+		String sqlWhere = getZzcSqlWherebzg(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -1088,8 +1102,8 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public List<Map<String, Object>> getZzcDatabzg(ZSZzc zsZzc, String qdate) {
-		String sqlWhere = getZzcSqlWherebzg(zsZzc, qdate);
+	public List<Map<String, Object>> getZzcDatabzg(ZSZzc zsZzc, String qdate,String t) {
+		String sqlWhere = getZzcSqlWherebzg(zsZzc, qdate,t);
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
 		String sqlCnt = "select count(*) from z_s_zzc t";
@@ -1114,10 +1128,10 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	// 方式3, 取值进一步自己处理(直接转换成easyUI的datagrid需要的东西，执行效率最高，最自由)
 	// -------------------------------
 	@Override
-	public JSONObject getZzcDatagridbzg1(ZSZzc zsZzc, DataGrid dataGrid, String qdate) {
+	public JSONObject getZzcDatagridbzg1(ZSZzc zsZzc, DataGrid dataGrid, String qdate,String t) {
 		String sqlWhere = "";
 		if (!"".equals(qdate)) {
-			sqlWhere = getZzcSqlWherebzg(zsZzc, qdate);
+			sqlWhere = getZzcSqlWherebzg(zsZzc, qdate,t);
 		}
 
 		// 取出总数据条数（为了分页处理, 如果不用分页，取iCount值的这个处理可以不要）
@@ -1149,7 +1163,7 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 	}
 
 	// 拼查询条件（where语句）
-	String getZzcSqlWherebzg(ZSZzc zsZzc, String qdate) {
+	String getZzcSqlWherebzg(ZSZzc zsZzc, String qdate,String t) {
 		// 拼出条件语句
 		String sqlWhere = "";
 		if (!sqlWhere.isEmpty()) {
@@ -1158,7 +1172,9 @@ public class JeecgJdbcServiceImpl extends CommonServiceImpl implements JeecgJdbc
 		sqlWhere += " t.ksdate<='" + qdate + "' ";
 		sqlWhere += " and";
 		sqlWhere += " t.jsdate>='" + qdate + "' ";
-
+		if(t!= null && !"0".equals(t)){
+			sqlWhere += t;
+		}
 		return sqlWhere;
 	}
 

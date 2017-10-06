@@ -11,7 +11,7 @@
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
 				<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">单位：</span>
-				<select name="zzcdepart" style="width: 140px">
+				<select name="zzcdepart" style="width: 120px">
 					<option value ="" >---请选择---</option>
 					<c:forEach items="${departList}" var="zzcdepart">
 						<option value="${zzcdepart.typename }">${zzcdepart.typename}</option>
@@ -22,12 +22,12 @@
     	<td>
 	    	<span style="display:-moz-inline-box;display:inline-block;">
 			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">姓名：</span>
-			<input type="text" name="name" style="width: 140px" /></span>
+			<input type="text" name="name" style="width: 120px" /></span>
     	</td>
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
 			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">职务：</span>
-				<select name="zw" style="width: 140px">
+				<select name="zw" style="width: 120px">
 					<option value ="" >---请选择---</option>
 					<c:forEach items="${zwList}" var="zw">
 						<option value="${zw.typename }">${zw.typename}</option>
@@ -38,12 +38,7 @@
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
 			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">不在岗种类：</span>
-			<input type="text" name="bzgzl" style="width: 140px" /></span>	
-		</td>
-    	<td>    	
-			<span style="display:-moz-inline-box;display:inline-block;">
-			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">备注：</span>
-			<input type="text" name="bz" style="width: 140px" /></span>
+			<input type="text" name="bzgzl" style="width: 120px" /></span>	
 		</td>
     </tr>
     <tr>
@@ -65,14 +60,14 @@
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
 			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">审批领导：</span>
-			<input type="text" name="spld" style="width: 140px" /></span>	
+			<input type="text" name="spld" style="width: 120px" /></span>	
 		</td>
     </tr>
     <tr>
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
 			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">出行方式：</span>
-			<input type="text" name="cxtype" style="width: 140px" /></span>
+			<input type="text" name="cxtype" style="width: 120px" /></span>
     	</td>
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
@@ -87,8 +82,15 @@
     	<td>    	
 			<span style="display:-moz-inline-box;display:inline-block;">
 			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">前往地点：</span>
-			<input type="text" name="qwaddress" style="width: 140px" /></span>
+			<input type="text" name="qwaddress" style="width: 120px" /></span>
     	</td>
+    </tr>
+    <tr>
+    	<td>    	
+			<span style="display:-moz-inline-box;display:inline-block;">
+			<span style="display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;">备注：</span>
+			<input type="text" name="bz" style="width: 120px" /></span>
+		</td>
     </tr>
     </table>
 	</div>

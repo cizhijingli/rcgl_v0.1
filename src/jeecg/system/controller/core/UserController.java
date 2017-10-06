@@ -896,7 +896,7 @@ public class UserController {
 //			cq.eq("spdate", spdate);
 			zsZzc.setSpdate(spdate);
 		}
-		cq.addOrder("createdate", SortDirection.asc);
+		cq.addOrder("createdate", SortDirection.desc);
 		cq.add();
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, zsZzc);
@@ -946,7 +946,7 @@ public class UserController {
 			cq.eq("spdate", spdate);
 			zsZzc.setSpdate(spdate);
 		}
-		cq.addOrder("createdate", SortDirection.asc);
+		cq.addOrder("createdate", SortDirection.desc);
 		cq.add();
 		// 查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, zsZzc);
@@ -967,7 +967,13 @@ public class UserController {
 		String qdate = "";
 		if (request.getParameter("zzcyljqdate") != null && !"".equals(request.getParameter("zzcyljqdate"))) {
 			qdate = oConvertUtils.getString(request.getParameter("zzcyljqdate").replace("-", "").trim());
-			JSONObject jObject1 = this.jeecgJdbcService.getZzcDatagridylj1(zsZzc, dataGrid, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			JSONObject jObject1 = this.jeecgJdbcService.getZzcDatagridylj1(zsZzc, dataGrid, qdate,t);
 			responseDatagrid(response, jObject1);
 		}
 	}
@@ -985,7 +991,13 @@ public class UserController {
 		String qdate = "";
 		if (request.getParameter("zzcwljqdate") != null && !"".equals(request.getParameter("zzcwljqdate"))) {
 			qdate = oConvertUtils.getString(request.getParameter("zzcwljqdate").replace("-", "").trim());
-			JSONObject jObject2 = this.jeecgJdbcService.getZzcDatagridwlj1(zsZzc, dataGrid, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			JSONObject jObject2 = this.jeecgJdbcService.getZzcDatagridwlj1(zsZzc, dataGrid, qdate,t);
 			responseDatagrid(response, jObject2);
 		}
 	}
@@ -1003,7 +1015,13 @@ public class UserController {
 		String qdate = "";
 		if (request.getParameter("zzcnljqdate") != null && !"".equals(request.getParameter("zzcnljqdate"))) {
 			qdate = oConvertUtils.getString(request.getParameter("zzcnljqdate").replace("-", "").trim());
-			JSONObject jObject2 = this.jeecgJdbcService.getZzcDatagridnlj1(zsZzc, dataGrid, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			JSONObject jObject2 = this.jeecgJdbcService.getZzcDatagridnlj1(zsZzc, dataGrid, qdate,t);
 			responseDatagrid(response, jObject2);
 		}
 	}
@@ -1020,7 +1038,13 @@ public class UserController {
 		String qdate = "";
 		if (request.getParameter("zzcbzgqdate") != null && !"".equals(request.getParameter("zzcbzgqdate"))) {
 			qdate = oConvertUtils.getString(request.getParameter("zzcbzgqdate").replace("-", "").trim());
-			JSONObject jObject2 = this.jeecgJdbcService.getZzcDatagridbzg1(zsZzc, dataGrid, qdate);
+			TSUser u = ResourceUtil.getSessionUserName();
+			String t = "0";
+			if(u.getBrowser()!= null && !"".equals(u.getBrowser())){
+				t = " and";
+				t += " t.depart='"+u.getBrowser().trim()+"'";
+			}
+			JSONObject jObject2 = this.jeecgJdbcService.getZzcDatagridbzg1(zsZzc, dataGrid, qdate,t);
 			responseDatagrid(response, jObject2);
 		}
 	}
@@ -1198,23 +1222,22 @@ public class UserController {
 			if (zsZzc.getNote() != null && !"".equals(zsZzc.getNote())) {
 				zsZzcs.setNote(zsZzc.getNote().trim());
 			}	
+			zsZzcs.setCreatedate(DataUtils.gettimestamp().toString());
 			
 			/***** Upd By ZM 20170924增加重复记录check start******/
 			Boolean isDuplicate = this.jeecgJdbcService.checkDuplicate(zsZzcs);
 			if(!isDuplicate){
 				message = "民警: " + zsZzcs.getName() + "休假时间重复，更新失败！！";
 				j.setMsg(message);
+				j.setSuccess(false);
 				return j;
 			} else {
 				
 				systemService.updateEntitie(zsZzcs);
 	
 				message = "民警: " + zsZzcs.getName() + "不在岗情况更新成功";
-				/*
-				 * if (StringUtil.isNotEmpty(roleid)) { saveRoleUser(users, roleid);
-				 * }
-				 */
-				systemService.addLog(message, Globals.Log_Type_LOGIN, Globals.Log_Leavel_INFO);
+				j.setSuccess(true);
+				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 			}
 			/***** Upd By ZM 20170924增加重复记录check end******/
 		} else {
@@ -1243,10 +1266,12 @@ public class UserController {
 			if(!isDuplicate){
 				message = "民警: " + zsZzc.getName() + "休假时间重复，添加失败！！！";
 				j.setMsg(message);
+				j.setSuccess(false);
 				return j;
 			} else {
 				systemService.save(zsZzc);
 				message = "民警: " + zsZzc.getName() + "不在岗情况添加成功";
+				j.setSuccess(true);
 				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 			}
 			/***** Upd By ZM 20170924 增加重复记录check end******/
@@ -1347,7 +1372,7 @@ public class UserController {
 			zsZzc = systemService.getEntity(ZSZzc.class, zzcid);
 
 			int now = Integer.parseInt(DataUtils.formatDate(DataUtils.gettimestamp(),"yyyyMMdd"));
-			int temp = Integer.parseInt(zsZzc.getCreatedate().trim());
+			int temp = Integer.parseInt(zsZzc.getCreatedate().replace("-", "").trim().substring(0,8));
 			if((now-temp)>1&&roles.indexOf("1")!=-1){
 				message = "记录"+zsZzc.getZzcdepart()+""+zsZzc.getName()+""+zsZzc.getBzgzl()+"已超过一天，不能删除";
 				j.setMsg(message);
@@ -1481,24 +1506,6 @@ public class UserController {
 		}
 		j.setMsg(message);
 
-		return j;
-	}
-	/**
-	 * 检查用户名称
-	 * 
-	 * @param user
-	 * @param req
-	 * @return
-	 */
-	@RequestMapping(params = "checkzzc")
-	@ResponseBody
-	public AjaxJson checkzzc(ZSZzc zsZzc, HttpServletRequest req) {
-		AjaxJson j = new AjaxJson();
-		j.setMsg("验证成功!");
-		j.setSuccess(true);
-		
-		/*j.setMsg("验证失败!");
-		j.setSuccess(false);*/
 		return j;
 	}
 }

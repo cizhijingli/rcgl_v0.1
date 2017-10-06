@@ -12,8 +12,8 @@
 	</div>
 	<div style="height:30px;" class="datagrid-toolbar">
 		<span style="float:left;">
-		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
-			onclick="zzcnljList.expFiles()">导出</a>
+		<!-- <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
+			onclick="zzcnljList.expFiles()">导出</a> -->
 		<a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit"
 			onclick="zzcnljList.expExcelFiles()">导出excel</a>
 		</span>

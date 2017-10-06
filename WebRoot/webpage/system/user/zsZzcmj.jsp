@@ -43,7 +43,7 @@
         </option>
        </c:forEach>
       </select>
-      <span >请选择职务</span>
+      <span  class="Validform_checktip">请选择职务</span>
      </td>
     </tr>
     <tr>
@@ -75,7 +75,7 @@
       <label class="Validform_label">审批日期:</label>
      </td>
      <td class="value" width="85%">
-	   <input class="Wdate" onClick="WdatePicker()" style="width: 150px" id="spdate" 
+	   <input class="Wdate" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyyMMdd',maxDate:new Date()})" style="width: 150px" id="spdate" 
 	 		name="spdate" value="${zsZzc.spdate}" datatype="*" readonly="readonly">
        <span class="Validform_checktip">必填</span>
      </td>
@@ -85,10 +85,10 @@
       <label class="Validform_label">起止日期:</label>
      </td>
      <td class="value" width="85%">
-	   <input class="Wdate" onClick="WdatePicker()" style="width: 150px" id="ksdate" 
+	   <input class="Wdate" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyyMMdd',maxDate:'#F{$dp.$D(\'jsdate\')}'})" style="width: 150px" id="ksdate" 
 	 		name="ksdate" value="${zsZzc.ksdate}" readonly="readonly">
 	   <label class="Validform_label"> - </label>
-	   <input class="Wdate" onClick="WdatePicker()" style="width: 150px" id="jsdate" 
+	   <input class="Wdate" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyyMMdd',minDate:'#F{$dp.$D(\'ksdate\')}'})" style="width: 150px" id="jsdate" 
 	 		name="jsdate" value="${zsZzc.jsdate}" readonly="readonly">
      </td>
     </tr>
@@ -111,10 +111,10 @@
       </label>
      </td>
      <td class="value" width="85%">
-	   <input class="Wdate" onClick="WdatePicker()" style="width: 150px" id="ljdate" 
+	   <input class="Wdate" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyyMMdd',maxDate:'#F{$dp.$D(\'fjdate\')}'})" style="width: 150px" id="ljdate" 
 	 		name="ljdate" value="${zsZzc.ljdate}" readonly="readonly">
 	   <label class="Validform_label"> - </label>
-	   <input class="Wdate" onClick="WdatePicker()" style="width: 150px" id="fjdate" 
+	   <input class="Wdate" onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyyMMdd',minDate:'#F{$dp.$D(\'ljdate\')}'})" style="width: 150px" id="fjdate" 
 	 		name="fjdate" value="${zsZzc.fjdate}" readonly="readonly">
      </td>
     </tr>

@@ -72,7 +72,7 @@
 	<select id="browser"  name="browser"  datatype="*">
        <c:forEach items="${departList}" var="zzcdepart">
         <option value="${zzcdepart.typename }" 
-        <c:if test="${zzcdepart.typename==zsZzc.zzcdepart}">selected="selected"</c:if>>
+        <c:if test="${zzcdepart.typename==user.browser}">selected="selected"</c:if>>
          ${zzcdepart.typename}
         </option>
        </c:forEach>
